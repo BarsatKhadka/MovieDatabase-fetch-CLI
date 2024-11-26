@@ -25,20 +25,21 @@ public class getTitleService {
 
     private String baseUrl = "https://api.themoviedb.org/3/discover/movie";
 
-    private HttpEntity<String> createHeaders() {
+    private ResponseEntity<RequestAPIModel> apiResponse(String requestUrl) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer "+apiKey);
         headers.set("accept", "application/json");
-        return new HttpEntity<>(headers);
+        HttpEntity<String> headerEntity = new HttpEntity<>(headers);
+        String url = baseUrl + requestUrl;
+        return restTemplate.exchange(url, HttpMethod.GET, headerEntity, RequestAPIModel.class);
     }
 
 
 
 
     public void getPopularTitle(){
-        String url = baseUrl+"?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc";
-        HttpEntity<String> entity = createHeaders();
-        ResponseEntity<RequestAPIModel> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, RequestAPIModel.class);
+        String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc";
+        ResponseEntity<RequestAPIModel> responseEntity = apiResponse(url);
         if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
             for(Result result : responseEntity.getBody().getAllResults()){
                 System.out.println(result.getMovietitle());
@@ -55,13 +56,9 @@ public class getTitleService {
         String maxDate = now.format(formatter);
         String minDate = tenDaysAgo.format(formatter);
 
-        String url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=" +minDate+ "&release_date.lte=" + maxDate;
+        String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=" +minDate+ "&release_date.lte=" + maxDate;
 
-
-
-
-        HttpEntity<String> entity = createHeaders();
-        ResponseEntity<RequestAPIModel> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, RequestAPIModel.class);
+        ResponseEntity<RequestAPIModel> responseEntity = apiResponse(url);
         if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
             for(Result result : responseEntity.getBody().getAllResults()){
                 System.out.println(result.getMovietitle());
@@ -72,9 +69,8 @@ public class getTitleService {
     }
 
     public void getTopRatedTitle(){
-        String url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200";
-        HttpEntity<String> entity = createHeaders();
-        ResponseEntity<RequestAPIModel> responseEntity= restTemplate.exchange(url, HttpMethod.GET, entity, RequestAPIModel.class);
+        String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200";
+        ResponseEntity<RequestAPIModel> responseEntity=  apiResponse(url);
         if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
             for(Result result : responseEntity.getBody().getAllResults()){
                 System.out.println(result.getMovietitle());
@@ -90,10 +86,10 @@ public class getTitleService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String maxDate = threeMonthAfter.format(formatter);
         String minDate = monthAfter.format(formatter);
-        String url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=" + minDate +"&release_date.lte=" +maxDate;
+        String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=" + minDate +"&release_date.lte=" +maxDate;
 
-        HttpEntity<String> entity = createHeaders();
-        ResponseEntity<RequestAPIModel> responseEntity = restTemplate.exchange(url , HttpMethod.GET , entity , RequestAPIModel.class);
+
+        ResponseEntity<RequestAPIModel> responseEntity = apiResponse(url);
         if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
             for(Result result : responseEntity.getBody().getAllResults()){
                 System.out.println(result.getMovietitle());

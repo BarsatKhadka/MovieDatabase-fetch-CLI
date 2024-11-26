@@ -35,6 +35,7 @@ public class MovieDatabaseFetchApplication implements CommandLineRunner {
 		System.out.println("------------------------");
 		System.out.println("Upcoming Movie Titles");
 		movieTitle.getUpcomingTitle();
+
 	}
 
 
