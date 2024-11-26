@@ -13,6 +13,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class getTitleService {
@@ -34,36 +37,48 @@ public class getTitleService {
         return restTemplate.exchange(url, HttpMethod.GET, headerEntity, RequestAPIModel.class);
     }
 
-
-
-
-    public void getPopularTitle(){
-        String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc";
-        ResponseEntity<RequestAPIModel> responseEntity = apiResponse(url);
-        if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
-            for(Result result : responseEntity.getBody().getAllResults()){
-                System.out.println(result.getMovietitle());
+    public void printApiResponse(ResponseEntity<RequestAPIModel> responseEntityFromApi) {
+        if(responseEntityFromApi.getBody() != null && responseEntityFromApi.getBody().getAllResults() != null) {
+            if (responseEntityFromApi.getBody().getAllResults() != null && !responseEntityFromApi.getBody().getAllResults().isEmpty()) {
+                for(Result result : responseEntityFromApi.getBody().getAllResults()){
+                    System.out.println(result.getMovietitle());
             }
         }
+            else{
+                System.out.println("Server did not respond 401");
+            }
+
+        }
+    }
+
+
+    public List<String> setDateTime(int plusDays, int minusDays){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime dayAfter = now.plusDays(plusDays);
+        LocalDateTime dayBefore = now.minusDays(minusDays);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String nowFormatted = now.format(formatter);
+        String dayAfterFormatted = dayAfter.format(formatter);
+        String dayBeforeFormatted = dayBefore.format(formatter);
+        return new ArrayList<>(Arrays.asList(dayAfterFormatted, dayBeforeFormatted,nowFormatted));
+
+    }
+
+    public void getPopularTitle () {
+        String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc";
+        ResponseEntity<RequestAPIModel> responseEntity = apiResponse(url);
+        printApiResponse(responseEntity);
     }
 
     public void getNowPlayingTitle(){
 
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime tenDaysAgo = now.minusDays(10);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String maxDate = now.format(formatter);
-        String minDate = tenDaysAgo.format(formatter);
+        String maxDate = setDateTime(0,0).get(2);
+        String minDate = setDateTime(0,10).get(1);
 
         String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=" +minDate+ "&release_date.lte=" + maxDate;
 
         ResponseEntity<RequestAPIModel> responseEntity = apiResponse(url);
-        if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
-            for(Result result : responseEntity.getBody().getAllResults()){
-                System.out.println(result.getMovietitle());
-            }
-        }
+        printApiResponse(responseEntity);
 
 
     }
@@ -71,32 +86,17 @@ public class getTitleService {
     public void getTopRatedTitle(){
         String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200";
         ResponseEntity<RequestAPIModel> responseEntity=  apiResponse(url);
-        if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
-            for(Result result : responseEntity.getBody().getAllResults()){
-                System.out.println(result.getMovietitle());
-            }
-        }
+        printApiResponse(responseEntity);
     }
 
     public void getUpcomingTitle(){
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime monthAfter = now.plusDays(30);
-        LocalDateTime threeMonthAfter = now.plusDays(90);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String maxDate = threeMonthAfter.format(formatter);
-        String minDate = monthAfter.format(formatter);
+        String maxDate = setDateTime(90,0 ).get(0);
+        String minDate = setDateTime(30,0 ).get(0);
         String url = "?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=" + minDate +"&release_date.lte=" +maxDate;
 
-
         ResponseEntity<RequestAPIModel> responseEntity = apiResponse(url);
-        if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
-            for(Result result : responseEntity.getBody().getAllResults()){
-                System.out.println(result.getMovietitle());
-            }
-        }
+        printApiResponse(responseEntity);
 
     }
-
 
 }
