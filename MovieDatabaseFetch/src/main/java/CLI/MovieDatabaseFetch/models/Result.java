@@ -12,4 +12,6 @@ public class Result {
 
     @JsonProperty("original_title")
     private String Movietitle;
+
+
 }

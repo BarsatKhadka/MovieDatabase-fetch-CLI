@@ -33,6 +33,8 @@ public class getTitleService {
     }
 
 
+
+
     public void getPopularTitle(){
         String url = baseUrl+"?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc";
         HttpEntity<String> entity = createHeaders();
@@ -60,12 +62,24 @@ public class getTitleService {
 
         HttpEntity<String> entity = createHeaders();
         ResponseEntity<RequestAPIModel> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, RequestAPIModel.class);
-        System.out.println(responseEntity.getBody().getAllResults());
+        if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
+            for(Result result : responseEntity.getBody().getAllResults()){
+                System.out.println(result.getMovietitle());
+            }
+        }
 
 
+    }
 
-
-
+    public void getTopRatedTitle(){
+        String url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=vote_average.desc&without_genres=99,10755&vote_count.gte=200";
+        HttpEntity<String> entity = createHeaders();
+        ResponseEntity<RequestAPIModel> responseEntity= restTemplate.exchange(url, HttpMethod.GET, entity, RequestAPIModel.class);
+        if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
+            for(Result result : responseEntity.getBody().getAllResults()){
+                System.out.println(result.getMovietitle());
+            }
+        }
     }
 
 

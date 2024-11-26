@@ -24,7 +24,14 @@ public class MovieDatabaseFetchApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) throws Exception {
+		System.out.println("Popular titles");
+		movieTitle.getPopularTitle();
+		System.out.println("------------------------");
+		System.out.println("Now playing Titles");
 		movieTitle.getNowPlayingTitle();
+		System.out.println("------------------------");
+		System.out.println("Top Rated Titles");
+		movieTitle.getTopRatedTitle();
 	}
 
 
