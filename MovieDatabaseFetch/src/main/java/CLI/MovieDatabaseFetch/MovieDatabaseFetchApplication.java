@@ -32,6 +32,9 @@ public class MovieDatabaseFetchApplication implements CommandLineRunner {
 		System.out.println("------------------------");
 		System.out.println("Top Rated Titles");
 		movieTitle.getTopRatedTitle();
+		System.out.println("------------------------");
+		System.out.println("Upcoming Movie Titles");
+		movieTitle.getUpcomingTitle();
 	}
 
 

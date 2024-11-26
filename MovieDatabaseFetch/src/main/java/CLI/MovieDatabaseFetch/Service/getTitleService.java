@@ -82,5 +82,25 @@ public class getTitleService {
         }
     }
 
+    public void getUpcomingTitle(){
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime monthAfter = now.plusDays(30);
+        LocalDateTime threeMonthAfter = now.plusDays(90);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String maxDate = threeMonthAfter.format(formatter);
+        String minDate = monthAfter.format(formatter);
+        String url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=" + minDate +"&release_date.lte=" +maxDate;
+
+        HttpEntity<String> entity = createHeaders();
+        ResponseEntity<RequestAPIModel> responseEntity = restTemplate.exchange(url , HttpMethod.GET , entity , RequestAPIModel.class);
+        if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
+            for(Result result : responseEntity.getBody().getAllResults()){
+                System.out.println(result.getMovietitle());
+            }
+        }
+
+    }
+
 
 }
