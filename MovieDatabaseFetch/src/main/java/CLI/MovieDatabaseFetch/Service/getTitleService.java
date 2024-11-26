@@ -11,6 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Service
 public class getTitleService {
 
@@ -20,19 +23,49 @@ public class getTitleService {
     @Value("${spring.TMDB.apiKey}")
     private String apiKey;
 
-    HttpHeaders headers = new HttpHeaders();
+    private String baseUrl = "https://api.themoviedb.org/3/discover/movie";
+
+    private HttpEntity<String> createHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer "+apiKey);
+        headers.set("accept", "application/json");
+        return new HttpEntity<>(headers);
+    }
+
 
     public void getPopularTitle(){
-        String url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc";
-        headers.set("accept", "application/json");
-        headers.set("Authorization", "Bearer "+ apiKey);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        String url = baseUrl+"?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc";
+        HttpEntity<String> entity = createHeaders();
         ResponseEntity<RequestAPIModel> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, RequestAPIModel.class);
         if(responseEntity.getBody() != null && responseEntity.getBody().getAllResults() != null){
             for(Result result : responseEntity.getBody().getAllResults()){
                 System.out.println(result.getMovietitle());
             }
         }
+    }
+
+    public void getNowPlayingTitle(){
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime tenDaysAgo = now.minusDays(10);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String maxDate = now.format(formatter);
+        String minDate = tenDaysAgo.format(formatter);
+
+        String url = "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_release_type=2|3&release_date.gte=" +minDate+ "&release_date.lte=" + maxDate;
+
+
+
+
+        HttpEntity<String> entity = createHeaders();
+        ResponseEntity<RequestAPIModel> responseEntity = restTemplate.exchange(url, HttpMethod.GET, entity, RequestAPIModel.class);
+        System.out.println(responseEntity.getBody().getAllResults());
+
+
+
+
+
     }
 
 

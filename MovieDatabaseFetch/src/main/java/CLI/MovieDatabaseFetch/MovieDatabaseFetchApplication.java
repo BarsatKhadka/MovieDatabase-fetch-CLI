@@ -24,8 +24,9 @@ public class MovieDatabaseFetchApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) throws Exception {
-		movieTitle.getPopularTitle();
+		movieTitle.getNowPlayingTitle();
 	}
+
 
 
 
