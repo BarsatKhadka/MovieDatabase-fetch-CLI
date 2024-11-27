@@ -9,17 +9,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
+import java.io.File;
 import java.util.Scanner;
 
 @SpringBootApplication
 public class MovieDatabaseFetchApplication implements CommandLineRunner {
 
-	private final getTitleService movieTitle;
 	private final commandLineService commandLine;
 
 	@Autowired
-	public MovieDatabaseFetchApplication(getTitleService movieTitle , commandLineService commandLine) {
-		this.movieTitle = movieTitle;
+	public MovieDatabaseFetchApplication( commandLineService commandLine) {
 		this.commandLine = commandLine;
 	}
 
@@ -28,46 +27,17 @@ public class MovieDatabaseFetchApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) throws Exception {
-		System.out.println("Popular titles");
-		movieTitle.getPopularTitle();
-		System.out.println("------------------------");
-		System.out.println("Now playing Titles");
-		movieTitle.getNowPlayingTitle();
-		System.out.println("------------------------");
-		System.out.println("Top Rated Titles");
-		movieTitle.getTopRatedTitle();
-		System.out.println("------------------------");
-		System.out.println("Upcoming Movie Titles");
-		movieTitle.getUpcomingTitle();
-		while(true) {
+
+		while (true) {
 			System.out.print("tmdb-app --type ");
 			Scanner scanner = new Scanner(System.in);
 			String userInput = scanner.nextLine();
-			boolean checkCommand = commandLine.checkCommand(userInput);
-
-			if(checkCommand) {
-				System.out.print("tmdb-app --type ");
-			}
+			commandLine.processCommand(userInput);
+		}
 
 
-			}
-			else{
-				System.out.println("Invalid command. For command help type '-h'");
-			}
-//
-//
-//		}
-
-
-
+		}
 
 
 	}
 
-
-
-
-
-
-
-}
