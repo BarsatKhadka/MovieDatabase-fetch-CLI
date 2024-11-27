@@ -28,28 +28,35 @@ public class MovieDatabaseFetchApplication implements CommandLineRunner {
 	}
 
 	public void run(String... args) throws Exception {
-//		System.out.println("Popular titles");
-//		movieTitle.getPopularTitle();
-//		System.out.println("------------------------");
-//		System.out.println("Now playing Titles");
-//		movieTitle.getNowPlayingTitle();
-//		System.out.println("------------------------");
-//		System.out.println("Top Rated Titles");
-//		movieTitle.getTopRatedTitle();
-//		System.out.println("------------------------");
-//		System.out.println("Upcoming Movie Titles");
-//		movieTitle.getUpcomingTitle();
+		System.out.println("Popular titles");
+		movieTitle.getPopularTitle();
+		System.out.println("------------------------");
+		System.out.println("Now playing Titles");
+		movieTitle.getNowPlayingTitle();
+		System.out.println("------------------------");
+		System.out.println("Top Rated Titles");
+		movieTitle.getTopRatedTitle();
+		System.out.println("------------------------");
+		System.out.println("Upcoming Movie Titles");
+		movieTitle.getUpcomingTitle();
 		while(true) {
 			System.out.print("tmdb-app --type ");
 			Scanner scanner = new Scanner(System.in);
 			String userInput = scanner.nextLine();
 			boolean checkCommand = commandLine.checkCommand(userInput);
+
 			if(checkCommand) {
-				
+				System.out.print("tmdb-app --type ");
 			}
 
 
-		}
+			}
+			else{
+				System.out.println("Invalid command. For command help type '-h'");
+			}
+//
+//
+//		}
 
 
 
